@@ -119,10 +119,21 @@ Get-ADUserResultantPasswordPolicy -Identity M004      # should show ExecutivePSO
 
 > Account lockout policies must be set at the **domain root level** to take effect on domain accounts — that's why we link at `manila.com`, not at an OU.
 
+### ⚠ IMPORTANT — precedence
+Account Lockout settings are a special category: if **Default Domain Policy** also defines lockout values (it has defaults), they may conflict with your new `lockout` GPO. To make sure your new GPO wins:
+
+1. After creating the `lockout` GPO, click **manila.com** in the Group Policy Management tree.
+2. In the right pane look at the **Linked Group Policy Objects** tab. There's a **Link Order** column.
+3. The lower the link order number, the higher the precedence. Make sure `lockout` is **at the top (Link Order = 1)**. If it isn't, click `lockout` and use the **up arrow** at the left side of the pane to move it.
+4. Run `gpupdate /force` on the DC, then on Client1.
+5. To prove it took effect: on Client1 deliberately mistype password 3 times → account should lock for ~60 sec.
+
 ### Verify
 ```powershell
+# Check resultant lockout policy (combines all GPOs at domain root)
 Get-ADDefaultDomainPasswordPolicy | Select LockoutThreshold, LockoutDuration, LockoutObservationWindow
 ```
+Expected: `LockoutThreshold 3, LockoutDuration 00:01:00, LockoutObservationWindow 00:01:00`. If you see 0 or 30 instead, the `lockout` GPO isn't winning — re-check link order.
 
 ---
 
@@ -229,7 +240,14 @@ Log on Client2 as M004 (Executive) → wait 10 seconds → screen should lock an
    - Click **OK**.
 5. Now do the same under the **User Configuration** side: expand **User Configuration** → **Policies** → **Windows Settings** → **Security Settings** → click **Public Key Policies** → double-click **Certificate Services Client – Auto-Enrollment** → same three settings → OK.
 6. Close the editor.
-7. To verify on Client1: open **Command Prompt** → run `gpupdate /force` and then `certutil -pulse`. Within a minute, open Start → type **"Manage computer certificates"** → click the result. Under **Personal → Certificates** you should see a new machine cert issued by WINSRV3.
+7. To verify on Client1: open **Command Prompt as Administrator** → run `gpupdate /force` first, then `certutil -pulse`.
+
+> ⚠ **Both commands matter.** Without `certutil -pulse`, the auto-enrollment client won't try until its next polling cycle (default ~8 hours). On a fresh GPO, you MUST force the pulse or no cert appears in time. If still no cert after 2 minutes:
+> - Run `certutil -pulse` again (sometimes the first one races a backend).
+> - Check Event Viewer → Applications and Services Logs → Microsoft → Windows → CertificateServicesClient-AutoEnrollment → Operational. Errors here will say what's missing (most commonly: GPO permissions, or the WebServer template not published).
+> - Make sure the Computer is reading the GPO: `gpresult /r` should list `certenroll` under "Applied Group Policy Objects".
+
+After both commands run cleanly, open Start → type **"Manage computer certificates"** → click the result. Under **Personal → Certificates** you should see a new machine cert issued by WINSRV3 (or your CA).
 
 ---
 

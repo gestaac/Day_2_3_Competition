@@ -259,11 +259,23 @@ After: `userdel -r bob` to clean up the test user.
 
 ## Step 8 — Apache HTTPS site for `www.manila.com`
 
+`mod_authnz_pam` is in EPEL on Rocky 9, not in the default repos. Enable EPEL first.
+
 ```bash
+# Enable EPEL + CRB (needed for mod_authnz_pam on Rocky 9)
+dnf -y install epel-release
+dnf config-manager --set-enabled crb 2>/dev/null || \
+  dnf config-manager --enable powertools 2>/dev/null  # name varies by version
+
+# Now install web stack
 dnf -y install httpd mod_ssl mod_authnz_pam
 mkdir -p /var/www/manila
 echo '<h1>Welcome to www.manila.com</h1>' > /var/www/manila/index.html
 ```
+
+> **If you have no internet at the venue** — `mod_authnz_pam` may not be installable. Two fallbacks (in order of preference):
+> 1. Use OS-Login style with `pam_sss.so` only (still works via the `httpd` PAM service file later in this step — but you'll need to install `mod_authnz_pam` somehow).
+> 2. Drop PAM auth entirely, change the vhost to `Require all granted` (no auth). You lose the ~0.4-mark "limit to domain users" aspect, but everything else still works.
 
 Generate a **self-signed** cert first — replace with WINSRV3 cert later (step 10). Self-signed is partial credit; signed is full.
 

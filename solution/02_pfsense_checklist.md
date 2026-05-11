@@ -175,6 +175,8 @@ Click **Save**.
 2. In the WAN row, click the small **▶ (play/start)** icon at the right. The red ⏹ becomes a green ▶ when running.
 3. Wait ~30 seconds. The status column should say **Started**.
 
+> ⚠ **Snort needs 1–2 minutes after "Started" to actually load rules and begin inspecting packets.** If the grader runs nmap the very moment Snort goes green, the first scan may not trigger an alert. Wait at least **90 seconds** between starting Snort and asking the grader to test. If you're verifying yourself, run nmap **twice** about a minute apart — the second one will alert reliably.
+
 ### 9.7 Verify by watching alerts
 1. Click the **Alerts** tab (top of Snort page).
 2. **Interface to Inspect** dropdown → choose **WAN**.
