@@ -2,6 +2,21 @@
 
 > **Hard rule:** never change a password that the project did not explicitly ask you to change. The graders log in as `Administrator` / `P@ssw0rd`, `root` / `P@ssw0rd`, and domain users with `P@ssw0rd`. Break that and you lose marks even on tasks you finished.
 
+## Team setup — READ FIRST
+
+You and your teammate share **one** set of VMs hosted on the ESXi server (PC3 — `192.168.1.1`):
+- **PC1** = teammate
+- **PC2** = you (`competitor1b`)
+- **PC3** = ESXi server holding all the VMs and ISOs
+
+Before you do anything else, open **`09_team_split_PC1_PC2.md`** and agree with your teammate on who does which track. It tells you:
+- How to connect from your laptop to the VMs on PC3 (VMware Workstation → Connect to Server).
+- Which files PC1 owns vs which files PC2 owns.
+- The 4 sync points where you wait for each other.
+- Which tools you must **never** use in parallel (GPO editor, pfSense web UI).
+
+The order below is the **dependency** order — parallel work between PC1 and PC2 is encouraged within each step.
+
 ## Pre-flight (10 min)
 1. Power on all VMs **except WINSRV4** (Offline Root CA — leave it off).
 2. From **Client1** open a CMD: `ping 192.168.2.10`, `ping 192.168.1.10`, `ping 172.16.100.254`. All three must respond.
