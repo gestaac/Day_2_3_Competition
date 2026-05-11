@@ -1,0 +1,628 @@
+===PAGE 1===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 27 January 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+_________________________________________________________________________________________  
+ 
+Official (Closed) and Non-Sensitive 
+Appendix 
+ 
+Executive Summary 
+You text for the executive summary should go here… 
+Table 1 
+ Description Severity (0-10) Risk (Low/ 
+Medium/High/Critical) 
+Why is this 
+a problem? 
+Mitigation 
+Recommendation 
+ 
+1      
+2      
+3      
+ 
+ 
+ 
+Official (Closed) and Non-Sensitive 
+54 Cyber Security 
+===PAGE 2===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+2 
+Official (Closed) and Non-Sensitive 
+Contents 
+Contents ................................ ................................ ................................ ................................ ................ 2 
+Introduction to Test Project ................................ ................................ ................................ ............... 3 
+Introduction ................................ ................................ ................................ ................................ .......... 4 
+Physical Topology ................................ ................................ ................................ ......................... 4 
+Logical Topology ................................ ................................ ................................ ........................... 5 
+Table 1. VM Finished Configuration Summary ................................ ................................ ......... 6 
+Description of project and tasks ................................ ................................ ................................ ........ 8 
+ISP ................................ ................................ ................................ ................................ ...................... 8 
+Firewall configuration ................................ ................................ ................................ ...................... 8 
+Table 2. Firewall settings ................................ ................................ ................................ ............. 9 
+PKI ................................ ................................ ................................ ................................ .................... 11 
+WINSRV1 ................................ ................................ ................................ ................................ ......... 11 
+LINSRV1 ................................ ................................ ................................ ................................ ........... 12 
+LAN clients ................................ ................................ ................................ ................................ ....... 14 
+WinClient3 ................................ ................................ ................................ ................................ ....... 14 
+Instructions to the Competitor ................................ ................................ ................................ ........ 14 
+ 
+===PAGE 3===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+3 
+Official (Closed) and Non-Sensitive 
+Introduction to Test Project 
+ 
+Login credentials for the competitor laptops are as follows:  
+User: competitor1b 
+Password: Tagaytay_62&L 
+ 
+Login credentials to log onto the ESXi server for the afternoon portion of the activity:  
+ 
+IP Address: 192.168.1.1 
+User: wsauser  
+Password: Andres@9V4 
+ 
+  
+===PAGE 4===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+4 
+Official (Closed) and Non-Sensitive 
+Introduction 
+Physical Topology 
+The physical topology of this project is as follows: competitors from each team will use VMWare Workstation to 
+access VMs hosted on a local ESXi server. All teams will have the same configuration and VMs, but only have 
+access to their own VMs, as per the following diagram: 
+ 
+ 
+
+===PAGE 5===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+5 
+Official (Closed) and Non-Sensitive 
+Logical Topology 
+The logical topology of the VMs provided on the ESXi server is as follows with the following Network 
+configuration: 
+
+===PAGE 6===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+6 
+Official (Closed) and Non-Sensitive 
+The VMs should all be preset with the correct IP addresses, subnet masks, and gateways, but it is the 
+Competitor’s responsibility to verify or identify any errors or discrepancy between the VMs provided and this 
+documentation, and to correct them if necessary. 
+Table 1. VM Finished Configuration Summary 
+ 
+VIRTUAL 
+MACHINE 
+VLAN 
+ 
+IP ADDRESS NOTES CREDENTIALS 
+ISP Internet  Offers DNS and website 
+access to locally connected 
+machines – serves as the 
+“fake Internet” for 
+connection testing. 
+Competitors should not 
+need access to this 
+machine for any reason. 
+N/A 
+Client1 and 
+Client2 
+LAN DHCP Client Internal access and testing Two machines have 
+been provided to 
+allow testing of 
+different settings in 
+the event competitors 
+need to be testing 
+different things at the 
+same time. 
+Access via any 
+existing Domain Users 
+with a password of 
+P@ssw0rd 
+Client3 Internet DHCP Client For testing VPN and 
+Websites in DMZ 
+Login in using a local 
+administrator with a 
+password of 
+P@ssw0rd 
+===PAGE 7===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+7 
+Official (Closed) and Non-Sensitive 
+VIRTUAL 
+MACHINE 
+VLAN 
+ 
+IP ADDRESS NOTES CREDENTIALS 
+WINSRV1 SERVERS 192.168.2.10/24 DC for AD, DNS and DHCP 
+for Internal Clients (CLIENT1 
+& 2) and Servers (WINSRV3)  
+All Users in AD have 
+a password of 
+“P@ssw0rd” – do 
+not modify the 
+passwords unless 
+required by the 
+project 
+WINSRV3 SERVERS 192.168.2.30/24 Issuing CA CA servers have 
+been installed. 
+WINSRV4 SERVERS 192.168.2.50/24 Offline Root CA  
+LINSRV1 DMZ 192.168.1.10/24 Public website hosting root/P@ssw0rd 
+competitor/P@ssw
+0rd 
+Access to setup as per 
+the project. 
+All required software 
+is pre-installed but 
+may need to be 
+configured. 
+Firewall Connected 
+to all vLANS 
+192.168.2.254 
+(Servers) 
+DHCP Client 
+(Internet) 
+192.168.1.254 
+(DMZ) 
+172.16.100.254 
+(LAN) 
+All traffic except that 
+specified in the project is 
+blocked. 
+admin/pfsense 
+===PAGE 8===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+8 
+Official (Closed) and Non-Sensitive 
+Description of project and tasks 
+Configure and test the settings for the following systems: 
+ISP 
+This machine simulates the Internet. It is running a DHCP server which will service the WAN interface on the 
+firewall and Client3, the external client. This machine will operate as the “upstream” DNS server and hosts two 
+websites to test the Firewall configuration from Internal clients. The two websites are: 
+https://www.nationalmuseum.gov.ph 
+https://www.starcity.com.ph 
+The purpose of these websites is for testing firewall configurations and has been created intentionally with 
+a self-signed certificate. 
+Competitors will not need to logon to this machine, and do not have logon credentials for it. It needs simply 
+to be on to provide DHCP/DNS/web services for testing. 
+ 
+Firewall configuration 
+The firewall is installed in its base configuration, with IP and interfaces connected to the proper subnets  and 
+IPs assigned. No other configurations have been done. Default logon to PFSense is admin/pfsense.  
+It is important to functionally test firewall configuration s from the machines on various networks to verify 
+functionality and not rely strictly on configurations. 
+● Set admin user password to be “P@ssw0rd” 
+● Setup DHCP for LAN clients on PFSense – WinSRV1 should be the DNS Server
+===PAGE 9===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+9 
+Official (Closed) and Non-Sensitive 
+ 
+Block all traffic except as listed: 
+Table 2. Firewall settings 
+ 
+SOURCE NETWORK 
+ 
+ 
+LAN 
+DESTINATION 
+NETWORK 
+ 
+Internet 
+PORTS/SERVICES 
+ALLOWED 
+ 
+Outbound and return 
+traffic to WAN allowed 
+Remark 
+ 
+ 
+Client 1/Client 2 is 
+allowed to access 
+internet (WAN) 
+ 
+LAN DMZ SSH, HTTP, HTTPS, 
+DNS allowed to 
+LINSRV1 
+ 
+Client1 /Client 2 can 
+perform password-
+based authentication via 
+SSH protocol to 
+LINSRV1, and access 
+website which 
+configured from the 
+LINSRV1. 
+LAN Servers For AD TCP/UDP - 53, For Active Directory 
+Domain Services 
+(ADDS) and CA 
+certificate requests. 
+  88, 135, 137-139, 389, 
+  443, 445, 464, 636, 
+  3268-3269 
+  For PKI: TCP – 9389 
+WAN DMZ Inbound WAN traffic to 
+the website at DMZ 
+allowed 
+(HTTP, HTTPS, DNS) 
+Website should be 
+accessible from internet 
+to DMZ interfaces 
+Servers As necessary for 
+services 
+As necessary for 
+services 
+ 
+DMZ Servers/AD TCP/UDP - 53, 88, 135, 
+137-139, 389, 445, 
+464, 636, 3268-3269 
+For LINSRV1 to join the 
+domain at AD. 
+ 
+After configuring inbound-outbound ports (allowed/not) in every interface, it is necessary to implement the 
+following on the firewall as well. 
+===PAGE 10===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+10 
+Official (Closed) and Non-Sensitive 
+● OpenVPN 
+● Set up a VPN connection using OpenVPN where a VPN client queries AD and uses a certificate produced by 
+WinSRV3 as the CA cert. Packages have been pre-downloaded. 
+● The VPN connection shall be protected by credentials. You are to create the necessary user and group 
+where it is required.  Name the VPN Users group as “VPNGroup” and its member as  “VPNUser” with 
+password “P@ssw0rd”. 
+● Member from the VPN Users group would be able to connect from CLIENT3 to OpenVPN – can use a self-
+signed certificate if you cannot get a CA signed certificate. 
+● To verify if the OpenVPN is already up/working, the VPN user  should have connectivity to the internal 
+network.   
+● Snort 
+● Install SNORT as IDS – should log all traffic going out to the Internet. Package has been pre-downloaded 
+● Attempts to access www.starcity.com.ph should be logged at Snort. 
+● Modify this custom rule at snort as appropriate and apply it to the WAN interface: 
+alert tcp any any <> a.b.c.d/24 any (flags: F; msg: “Possible FIN scan”; sid: 100001) 
+● This rule can be tested by initiating a port scan in nmap from CLIENT3. 
+● Internet Access 
+● Set rules that will allow your Internal clients as well as CLIENT 3 (using VPN) to access the 
+www.nationalmuseum.gov.ph site on the Internet, but will block access to www.starcity.com.ph.
+===PAGE 11===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+11 
+Official (Closed) and Non-Sensitive 
+PKI 
+2 Tier PKI 
+WinSRV4 will be offline RootCA. This is already configured and powered off. You should not need to turn this 
+on unless you wish to troubleshoot an issue . I t is included for completeness and in industry it would be 
+completely powered off and removed from network access. 
+WinSRV3 will be the issuing CA. 
+This machine is already configured as the subordinate (issuing) CA for the domain. Complete the following tasks: 
+● Create a new Group Policy Object called “ certenroll” so that computers on the domain will 
+automatically receive a certificate from the issuing CA through application of the GPO. These GPO’s 
+should be set to autoenroll. 
+● When an internal client browses to either of the following websites, it should not be prompted with 
+a certificate error on connection, since the root-ca should be recognized as a trusted CA via policy. 
+● Through auto-enrollment, WinSRV3 should receive a certificate for the Web server in the IIS installation.  
+(Website: https://webtest.manila.com) 
+● Also install a certificate onto the LINSRV1 for the Website there. (Website: https://www.manila.com) 
+ 
+WINSRV1 
+Note – wireshark has been installed on this machine for troubleshooting purposes.  
+● Create a password policy that requires all domain users’ passwords to be 8 characters in length, and keep 
+a history of 30 past passwords. 
+● Create a fine-grained password policy that requires members of the executive group to have a 16-character 
+long password. Change password to P@ssw0rdP@ssw0rd during testing for one member of executive 
+group.  
+● Create a login banner/title that says “WorldSkills ASEAN Manila” 
+● Create a login banner/text that says “Authorized access only” 
+● Create a GPO called “lockout” that will lock accounts after 3 failed logon attempts for all domain users. 
+Account duration lockout is 60 seconds. 
+● Create a GPO called “restrict control panel” that will restrict access to the control panel – which is only 
+applicable to all users, except for the executive group.  
+● Create a GPO called “disabled add and remove program panel” that does not allow executive group to use 
+control panel to add new program, uninstall or change a program. 
+● Create a GPO called “autolock” that will auto lock screen after 10 seconds of inactivity – only applicable to 
+the executive group.  
+===PAGE 12===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+12 
+Official (Closed) and Non-Sensitive 
+● Create a share on WinSRV1 following best practices at the local path C: \shares\pictures shared as 
+“pictures” that will allow the Read access (R) to the Marketing group, Full Control (FC) for Executive 
+group, no access for anyone else. 
+● In the C:\shares\pictures folder, you will find a picture called “park.jpg”, set auditing on this file so it is 
+logged when read by a member of any group. 
+ 
+The client would like you to recommend three other GPOs which should be created to help better secure the 
+domain. Fill in the table below describing what the effect is of the GPOs you have chosen, and why you chose 
+these GPO settings over other possible GP O settings. This document should be saved on the desktop of the 
+competitor computer and be sure when finishing that experts are able to find/collect the file.  
+ 
+Name of Policy to 
+be Included in GPO 
+Recommended 
+Path to Setting in 
+Policy 
+Effects of Applying 
+this GPO 
+Why did you select 
+this GPO over 
+Other Possible 
+Choices? 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+   
+ 
+ 
+ 
+   
+ 
+LINSRV1 
+● Join LinSRV1 to manila.com domain. 
+● Ensure all domain-joined machines can resolve LinSRV1 by name to its IP address using DNS. 
+ 
+● User Access Control 
+● Only allow domain users C1 and C2 to access the system via SSH. 
+● If domain integration fails, create local users C1 and C2 matching the expected credentials. 
+● Grant administrative privileges only to C1 and C2 using the sudo mechanism. 
+● No other users should have sudo access or administrative privileges.  
+● Local Firewall Configuration   
+===PAGE 13===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+13 
+Official (Closed) and Non-Sensitive 
+● Ensure the firewall is active and enabled to start at boot. 
+● Permanently allow only required services through the firewall. 
+● Secure SSH Configuration  
+● Configure SSH to listen on port 2022. 
+● Disable root login via SSH. 
+● Restrict SSH access to only the C1 and C2 users. 
+● Limit maximum authentication attempts to 3. 
+● Password Policy Enforcement for users 
+• Minimum length of 10 characters. 
+• Include lowercase, uppercase, numeric, and special characters. 
+• Password expires every 30 days. 
+• Trigger expiry warnings starting on day 25. 
+● HTTPS Web Server Hardening 
+● Make the hosted website (/var/www/manila) accessible via HTTPS. 
+● Prefer a certificate signed by the WinSRV3 CA; otherwise, use a self-signed certificate. 
+● Configure HTTP to redirect to HTTPS.  
+● Limit the website’s exposure to domain users only. A domain user should be able to access the 
+website from the Internet through his/her domain login credential. 
+● SELinux Enforcement  
+● Ensure SELinux is enabled and set to Enforcing mode. 
+● Adjust SELinux contents and policies as necessary so that the httpd service can access 
+/var/www/manila and function properly. 
+ 
+ 
+  
+===PAGE 14===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+14 
+Official (Closed) and Non-Sensitive 
+LAN clients 
+Note – wireshark and putty have been installed on these machines for troubleshooting purposes.  
+● Use these machines to functionally verify requirements specified in other sections 
+● Refer to this table for the list of AD users for testing purpose: 
+Table 3. AD users 
+ 
+ID Job Title Department City OU Groups 
+M001 Brand Marketing 
+Specialist 
+Marketing 
+ 
+ Manila Manila Marketing 
+ 
+M002 Customer Experience 
+Representative 
+Customer 
+Service 
+ Manila Manila Customer Service 
+M003 Store Sales Sales  Manila Manila Sales 
+M004 Operations Manager Operations 
+and Logistics 
+ Manila Manila Executive 
+S001 Marketing Manager Marketing Singapore Singapore Executive 
+C1 Technical Support IT Manila Manila IT 
+C2 Technical Support IT Singapore Singapore IT 
+ 
+WinClient3 
+Note - Nmap is installed if you wish to initiate a port scan on the firewall. 
+● Remote access to network via VPN 
+● Test website access for DMZ 
+ 
+ 
+Instructions to the Competitor 
+All existing user accounts have a password of P@ssw0rd including the root and administrator accounts.  
+We know that this is a weak password to use and have done this for ease of use and assessment at the 
+competition and should not be considered a vulnerability. Please do not change or reset the passwords unless 
+directed by the project as experts will be unable to login and assess your configurations. 
+All server VMs have statically configured IP addresses. You are responsible verifying if these are set correctly 
+===PAGE 15===
+ 
+ 
+14th WorldSkills ASEAN Competition • Manila, Philippines 
+ 
+Version 1.0 • Updated on 25 February 2025 
+Adopted & Adapted from WorldSkills Lyon 2024 
+__________________________________________________________________________________________  
+ 
+ 
+Country 1 (CE) Country 2 (DCE) Country 3 (E) Country 4 (E) Country 5 (E) 
+     
+Country 6 (E) Country 7 (E) Country 8 (E) Country 9 (E) Country 10 (E) 
+     
+15 
+Official (Closed) and Non-Sensitive 
+in the case that a setting on a virtual machine is different from this document. All configurations must survive 
+a system reboot. 
+ 
+This document will be provided digitally on the competitor’s workstation. Combine all answer documents into 
+a single file for submission and save it on the competitor’s desktop. Once you signal to the experts that you 
+have completed the task, the file will  be collected. Please ensure that the file is named using your country 
+code, and that the experts are able to retrieve it before you leave the competition venue.  

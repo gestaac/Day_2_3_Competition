@@ -1,0 +1,418 @@
+===SHEET: CIS Marking Scheme Import (rows=1000 cols=14)===
+54 Cyber Security													
+WorldSkills Occupational Standards													
+Section	WSOS Marks							WSOS Marks	Aspect Marks	Variation			
+1.0	1 - Work Organization and Management							5.0	4.45	0.55			
+2.0	2 - Communication and Interpersonal Skills							10.0	9.7	0.3			
+3.0	3 - Secure System Design and Creation							10.0	9.57	0.43			
+4.0	4 - Secure System Operation and Maintenance							15.0	15.8	0.8			
+5.0	5 - Secure Systems Protections and Defense							15.0	15.47	0.47			
+6.0	6 - Operations and Management							20.0	19.46	0.54			
+7.0	7 - Intelligence Collection and Analysis							10.0	9.97	0.03			
+8.0	8 - Investigation and Digital Forensics							15.0	15.58	0.58			
+								Total Variation		3.7			
+Criteria													
+ID	Name									Mark			
+A	Enterprise Infrastructure Security									25.0			
+B	Cyber Security Incident Response, Digital Forensics, Application Security									25.0			
+C	Red CTF									25.0			
+D	Blue CTF									25.0			
+E													
+F													
+G													
+H													
+I													
+Sub
+Criterion
+ID	Sub Criterion
+Name or Description	Day of Marking	Aspect
+Type
+M = Meas
+J = Judg	Aspect - Description	Judg Score	Extra Aspect Description (Meas or Judg)
+OR
+Judgement Score Description (Judg only)	Requirement
+(Measurement Only)	WSOS Section	Calculation Row 
+(Export only)	Max
+Mark	Criterion A	Total
+Mark	25
+A1	Morning of Day 1 - security assessments	1											
+			M	vulnerability identification		From executive summary list, or others not mentioned	Identified 2 listed vulnerabilities or found another - must be apache related	2.0	1.0	2.0	2.72		
+			J	executive summary of vulnerabilities
+ and gave good non technical summary
+Notes - 1) certificate valid, but ldap query will send username/passwords clear text - uses ldap not ldaps
+2)SSLProtocol is not defined in ssl.conf - should be limited to TLSv1.2
+3)file and folder permissions are out of box and could be further restricted
+4)selinux not enabled - not part of apache, but logical to include
+5)standard user/group used for apache operation, could set specific user group for this service
+6)could be other specific things - will need to judge				2.0		2.0	2.72	4.0	
+					0.0	not done, totally wrong							
+					1.0	some good but incomplete or some error							
+					2.0	correct to minimal industry standard							
+					3.0	exceptional - got two worst vulnerabilities							
+			J	1st vulnerability
+0-3 as above - looking for accuracy in form - risk, severity, identification and remediation suggestions				2.0		1.0	1.36	2.0	
+					0.0	not done, totally wrong							
+					1.0	some good but incomplete or some error							
+					2.0	correct to minimal industry standard							
+					3.0	exceptional - got two worst vulnerabilities							
+			J	2nd vulnerability
+0-3 as above - looking for accuracy in form - risk, severity, identification and remediation suggestions				2.0		1.0	1.36	2.0	
+					0.0	not done, totally wrong							
+					1.0	some good but incomplete or some error							
+					2.0	correct to minimal industry standard							
+					3.0	exceptional - got two worst vulnerabilities							
+A2	Firewall	1											
+			M	set admin password on Firewall		connect to firewall from client 1 browser - login as admin/P@ssw0rd	Password to be changed from default	4.0	1.0	0.2	0.272	0.25	
+			M	DHCP handled by firewall		check configs on PFSense - service DHCP - should be operational	DHCP: 172.16.100.254
+Manila.com
+Gateway: 172.16.100.254
+DNS: 192.168.2.10	4.0	1.0	0.2	0.272	0.25	
+						Being a stateful Firewall, we only need outbound rules set. Best practice would be to specify IP or subnet where appropriate, will be a judgement mark at end after looking at rules for each interface to see if best practice followed, should not use "*" indiscriminately and should not have uneeded rules that might open something up - mark as correct if traffic allowed for now but take note, and then mark down on judgement mark if too much traffic is allowed - default allow any rules left? a kill all rule in place? etc.							
+			M	LAN interface		DMZ rules:		1.0	1.0	0.6	0.816	0.8	
+			M	LAN interface		SSH -> DMZ	Allow traffic to WAN	3.0	1.0	0.3	0.408	0.4	
+			M	Servers Interface		http > DMZ	Should not be rules here, as no traffice should be initiated from DMZ	6.0	1.0	0.1	0.136	0.15	
+			M	DMZ Interface		Firewall > Rules > DMZ
+similar to AD connection from WAN - need to authenticate with AD,for AD access since machine must join Domain	53, 88, 135, 137-138, 389, 443, 445, 464, 636, 3268-3269	3.0	1.0	0.4	0.544	0.6	
+			M	WAN Interface / NAT		Firewall > NAT > portforward	WAN > 192.168.1.10 DNS, http, https	4.0	1.0	0.4	0.544	0.6	
+			M	OpenVPN Installed		check configs on PFSense - service > OPenVPN	Is configured? (functional test will be done later)	5.0	1.0	0.7	0.952	1	
+			M	PKI cert for OpenVPN		domain cert for OPNVPN	verify in configs that certificate is not self signed	3.0	1.0	0.25	0.34	0.4	
+			M	SNORT installed		snort installed and started Service > snort	Is configured? (functional test will be done later)	3.0	1.0	0.5	0.68	0.7	
+			M	SNORT tracking events		rule implemented	check if christmas tree rule being logged	3.0	1.0	0.3	0.408	0.4	
+			J	FW - best practice
+General mark on firewall rule implementations				2.0		1.0	1.36	1.4	
+					0.0	insecure or not done completely - taking into account all interfaces							
+					1.0	are set, but too lenient in some cases							
+					2.0	Industry standard							
+					3.0	Very strict and secure - well named rules, logically laid out in correct order - all interfaces, no unncessary rules, aliases?							
+A3	LINSRV1	1											
+			M	Domain join LinSRV1		log into WInSRV1 open ADUC, and DNS - LINSRV1	should have LINSRV1 computer account in AD and Host record in DNS 	1.0	1.0	0.2	0.272	0.25	
+			M	should be joined to manila.com		log into LINSRV1 as root/P@ssw0rd
+#realm list	should show joined to Domain	3.0	1.0	0.2	0.272	0.25	
+			M	ssh configs		#cat /etc/ssh/sshd_config | grep -E "PeritRoo|Port|Allow"	Port 2022
+PermitRootLogin no
+AllowUsers C1 C2	5.0	1.0	0.2	0.272	0.25	
+						*Thought* - the following commands if run from putty on a Clients direct from spreadsheet could be cut and pasted once it's been determined you can ssh in - it's short commands though…. So wouldn't take long - could be scripted also							
+			M	firewall config1		#systemctl status firewalld	should be started: Active: active (running)	5.0	1.0	0.2	0.272	0.25	
+			M	firewall config2		#firewall-cmd --list-all --permanent	services should included 2022, http, https, kerberos,
+but NOT unneeded services 	3.0	1.0	0.3	0.408	0.4	
+			M	Linux password complexity		#useradd bob
+#passwd bob
+#"password" - will not allow new password - does not meet complexity/length
+#passwd bob
+#P@ssw0rd12
+#chage -l bob
+bob created - password must meet complexity requirements
+
+# chage -l bob
+Last password change					: Jul 30, 2024
+Password expires					: Sep 03, 2024
+Password inactive					: never
+Account expires						: never
+Minimum number of days between password change		: 25
+Maximum number of days between password change		: 35
+Number of days of warning before password expires	: 25		4.0	1.0	0.55	0.748	0.75	
+			M	sudo test (will functional test C1 later)		#su -l bob
+$sudo useradd fred
+$exit
+#	attempts to useradd as bob should fail	3.0	1.0	0.2	0.272	0.25	
+			M	firewall on?		#systemctl status firewalld	should be started: Active: active (running)	3.0	1.0	0.2	0.272	0.25	
+			M	firewall config2		#firewall-cmd --list-all --permanent	services should included 2022, http, https, kerberos, 	3.0	1.0	0.3	0.408	0.4	
+			M	selinux status		#sestatus	enforcing	3.0	1.0	0.2	0.272	0.25	
+			M	selinux implemented for website		#cd /var/www
+#ls -lZ lum	will show selinux context (httpd_sys_content_t) - (to be verified!)	3.0	1.0	0.3	0.408	0.4	
+			M	website using PKI cert		open firefox connect to https://www.manila.com	no certificate warning - examine cert - root chain should be from PKI	4.0	1.0	0.3	0.408	0.4	
+A4	WinSRV1 (AD)	1											
+			M	GPO for certificates		Open GPM in Server Manager - browse to domain,	verify that a certenroll policy exists at the domain level and is set to autoenroll	3.0	1.0	0.4	0.544	0.6	
+			M	google GPO		In GPM in Server Manager - browse to domain, verify that a google policy exists at the domain level and is set to control the homepage	setting at: computer configuration > administrative templates > google > startup, home page and new tab page > configure the home page URL > www.manila.com	4.0	1.0	0.3	0.408	0.4	
+			M	share created?		Server manager > file and storage services > shares	"pictures" share should exist at c:\shares\pictures	3.0	1.0	0.2	0.272	0.25	
+			M	share permissions work		check > properties > permissions in console	verify resultant permission for share:
+ CS=R
+Graphics=Mod
+IT=FC	2.0	1.0	0.2	0.272	0.25	
+			J	GPO recommendations
+Make sure we can get the files…
+remember, they've been asked to restrict control panel and registry access,login banner and password policies already. Looking for 3 others. Other Internet suggestions include (will be others, but here's a list): 
+audit logs, 
+screen lockout
+account lockout
+removable media
+no cmd/PS
+Limit software installs
+Prevent LAN manager Hash storage
+limit access of blank password to console
+no forced restarts
+Monitor GPO changes
+Disable SID translation
+Remove anon users from everyone
+NLTM auditing
+Disable LLMNR
+Control Local Admins groups
+Mange firewalls
+enable UAC
+applocker				2.0		0.7	0.952	1	
+					0.0	not completed, inappropriate settings							
+					1.0	good recommendations, 1 so-so							
+					2.0	All logical good choices							
+					3.0	All logical good choices with clear rationale							
+			J	best practices followed for share
+
+or some combo thereof - watch for NTFS inheritence, perms set on NTFS rather than share… etc.				2.0		0.5	0.68	0.7	
+					0.0	perms wrong							
+					1.0	some set successfully							
+					2.0	All perms set, no local inheritance, no explicit denial, creator/owner							
+					3.0	AGLP and all of above							
+A5	WINSRV3	1											
+			M	CA Check		Server manager > tools> Open CA - check for certificates issued -	will show certs issued for users/computers	4.0	1.0	0.2	0.272	0.25	
+A6	Client1	1											
+			M	can reach Internet Website		log in as Anorbert/P@ssw0rd, open browser, go to www.nationalmuseum.gov.ph	can reach "Internet"	5.0	1.0	0.3	0.408	0.4	
+			M	can not reach restricted website		go to www.starcity.com.ph	should be blocked by firewall	5.0	1.0	0.3	0.408	0.4	
+			M	DHCP from PFSense functional test		ipconfig /release 
+ipcofig /renew
+ipconfig /all	get IP from PFSense as DHCP server - with DNS, gateway and domain name options	5.0	1.0	0.2	0.272	0.25	
+			M	ssh to LinSRV1 can connect to ssh as C1 port 2022		putty: ssh to Winclient1 port 2022 - C1@MANILA.COM@192.168.1.10:2022	connect	3.0	1.0	0.4	0.544	0.6	
+			M	additional test to sudo		#sudo useradd fred	successfully add user with sudo as C1 or C2 user (domain or local), manually check on server if can't ssh	3.0	1.0	0.3	0.408	0.4	
+			M	https traffic over firewall		open firefox: open https://www.manila.com	site should be accessible with or without warning	1.0	1.0	0.3	0.408	0.4	
+			M	PKI check		look at certificate	access to site without warning - examine cert - chould be from WinSRV3	1.0	1.0	0.4	0.544	0.6	
+			M	checking GPO policy for certs		login as:Anorbert open browser go to https://www.manila.com website
+check cert store	no issue with cert 
+	6.0	1.0	0.5	0.68	0.7	
+			M	access remote webstie		verify snort access - login to Firewall as admin/P@ssw0rd	login with new password, web traffic should be should be logged	6.0	1.0	0.5	0.68	0.7	
+			M	SNORT restriction		check SNORT rule	should be there	6.0	1.0	0.3	0.408	0.4	
+			J	GPO recommendations				2.0		0.6	0.816	0.8	
+					0.0	not done, totally wrong							
+					1.0	some good but incomplete or error							
+					2.0	correct but explanations weak, or maybe good but not best choices							
+					3.0	exceptional, excellent GPO choices, good explanation							
+A7	Client2 (Internal)	1											
+			M	Linux domain joined and ssh traffic functional test - also that ssh allowed over firewall		ssh using putty as mratt@manila.com@Linsrv1 (or @IP)	Can log in as domain user	1.0	1.0	0.3	0.408	0.4	
+			M	check certificate enrollment		open chrome go to https:webtest.manila.com	no certificate warning should show - when checking the chain of the certificate, whole chain should be present, including WInsrv4	4.0	1.0	0.3	0.408	0.4	
+			M	cert and DNS verification		open cli 
+ping www.manila.com	should resolve to LINSRV1 in DMZ (whether or not it can ping) (192.168.100.10)	4.0	1.0	0.2	0.272	0.25	
+			M	certandroll		gpresult /v | findstr "certen"	certenroll policy should be applied	4.0	1.0	0.3	0.408	0.4	
+			M	default home page - functional check		open chrome browser	confirm that the browser uses www.manila.com as the home page - it does not matter if the browser can reach the page successfully, but that it tries to use this page, attempt to change home page should fail on reopening browser	2.0	1.0	0.2	0.272	0.25	
+			M	check GPO		>gpresult /v	policies for chrome, exists called "google"	4.0	1.0	0.2	0.272	0.25	
+			M	banner applied		during login banner: WorldSkills Lyon/authorized access only	banner should be there prior to login	3.0	1.0	0.3	0.408	0.4	
+			M	verify share access		Log in as graphics user win + r > \\winsrv1\pictures\manila.jpg - try to access file	can read "france.jpg" -here we are checking if share is up and accessible	3.0	1.0	0.3	0.408	0.4	
+			M	Auditing		Log in as administrator on WInSRV1 - check security log	above access should be logged	4.0	1.0	0.5	0.68	0.7	
+A8	Client3 (External)	1											
+			M	VPN access		log on as VPNUSer	successful connection	6.0	1.0	0.5	0.68	0.7	
+			M	DNS access		ping www.manila.com	should resolve to external interface IP of firewall	6.0	1.0	0.3	0.408	0.4	
+			M	access DMZ website		Open browser, connect to…	successful connection	2.0	1.0	0.5	0.68	0.7	
+			M	christmas scan		login to client3 as administrator, use installed nmap to initiate Xmas tree scan to WAN interface of Firewall
+Log into Client2, open browser and access 172.16.1.254 admin/P@ssword 
+In SNORT console check alerts	Alert should be triggered "possible XMAS Scan" sid 100001	3.0	1.0	0.4	0.544	0.6	
+Sub
+Criterion
+ID	Sub Criterion
+Name or Description	Day of Marking	Aspect
+Type
+M = Meas
+J = Judg	Aspect - Description	Judg Score	Extra Aspect Description (Meas or Judg)
+OR
+Judgement Score Description (Judg only)	Requirement
+(Measurement Only)	WSOS Section	Calculation Row 
+(Export only)	Max
+Mark	Criterion B	Total
+Mark	25
+B1	HO Flags	2											
+			M	Flag HO-01		Competitors successfully get flag in CTF	Got flag or not Y/N	6.0	1.0	0.84			
+			M	Flag HO-01H1		Competitors successfully get flag without H1	Add if hint NOT used	6.0	1.0	0.21			
+			M	Flag HO-01H2		Competitors successfully get flag without H2	Add if hint NOT used	6.0	1.0	1.04			
+			M	Flag HO-02		Competitors successfully get flag in CTF	Got flag or not Y/N	8.0	1.0	0.28			
+			M	Flag HO-02H1		Competitors successfully get flag without H1	Add if hint NOT used	8.0	1.0	0.07			
+			M	Flag HO-02H2		Competitors successfully get flag without H2	Add if hint NOT used	8.0	1.0	0.34			
+			M	Flag HO-03		Competitors successfully get flag in CTF	Got flag or not Y/N	6.0	1.0	0.42			
+			M	Flag HO-03H1		Competitors successfully get flag without H1	Add if hint NOT used	6.0	1.0	0.1			
+			M	Flag HO-03H2		Competitors successfully get flag without H2	Add if hint NOT used	6.0	1.0	0.52			
+			M	Flag HO-04		Competitors successfully get flag in CTF	Got flag or not Y/N	8.0	1.0	0.97			
+			M	Flag HO-04H1		Competitors successfully get flag without H1	Add if hint NOT used	8.0	1.0	0.24			
+			M	Flag HO-04H2		Competitors successfully get flag without H2	Add if hint NOT used	8.0	1.0	1.22			
+			M	Flag HO-05a		Competitors successfully get flag in CTF - Mark split between 2 aspects both- are complete if flag found	Got flag or not Y/N	6.0	1.0	1.63			
+			M	Flag HO--5b		Competitors successfully get flag in CTF	Got flag or not Y/N	8.0	1.0	1.5			
+			M	Flag HO-06a		Competitors successfully get flag in CTF	Got flag or not Y/N	4.0	1.0	1.78			
+			M	Flag HO-06b		Competitors successfully get flag in CTF - Mark split between 2 aspects both- are complete if flag found	Got flag or not Y/N	4.0	1.0	1.0			
+			M	Flag HO-07a		Competitors successfully get flag in CTF - Mark split between 2 aspects both- are complete if flag found	Got flag or not Y/N	8.0	1.0	1.78			
+			M	Flag HO-07b		Competitors successfully get flag in CTF - Mark split between 2 aspects both- are complete if flag found	Got flag or not Y/N	8.0	1.0	1.0			
+B2	Casual Malware Flags	2											
+			M	Flag CM-01		Competitors successfully get flag in CTF	Got flag or not Y/N	7.0	1.0	0.28			
+			M	Flag CM-01H1		Competitors successfully get flag without H1	Add if hint NOT used	7.0	1.0	0.07			
+			M	Flag CM-01H2		Competitors successfully get flag without H2	Add if hint NOT used	7.0	1.0	0.34			
+			M	Flag CM-02		Competitors successfully get flag in CTF	Got flag or not Y/N	8.0	1.0	0.83			
+			M	Flag CM-02H1		Competitors successfully get flag without H1	Add if hint NOT used	8.0	1.0	0.21			
+			M	Flag CM-02H2		Competitors successfully get flag without H2	Add if hint NOT used	8.0	1.0	1.04			
+			M	Flag CM-03		Competitors successfully get flag in CTF	Got flag or not Y/N	4.0	1.0	0.42			
+			M	Flag CM-03H1		Competitors successfully get flag without H1	Add if hint NOT used	4.0	1.0	0.1			
+			M	Flag CM-03H2		Competitors successfully get flag without H2	Add if hint NOT used	4.0	1.0	0.52			
+			M	Flag CM-04		Competitors successfully get flag in CTF	Got flag or not Y/N	8.0	1.0	0.28			
+			M	Flag CM-04H1		Competitors successfully get flag without H1	Add if hint NOT used	8.0	1.0	0.07			
+			M	Flag CM-04H2		Competitors successfully get flag without H2	Add if hint NOT used	8.0	1.0	0.34			
+			M	Flag CM-05		Competitors successfully get flag in CTF	Got flag or not Y/N	8.0	1.0	1.25			
+			M	Flag CM-05H1		Competitors successfully get flag without H1	Add if hint NOT used	8.0	1.0	0.14			
+			M	Flag CM-06		Competitors successfully get flag in CTF	Got flag or not Y/N	4.0	1.0	1.57			
+			M	Flag CM-06H1		Competitors successfully get flag without H1	Add if hint NOT used	4.0	1.0	0.17			
+			M	Flag CM-07		Competitors successfully get flag in CTF	Got flag or not Y/N	4.0		1.04			
+			M	Flag CM-08		Competitors successfully get flag in CTF	Got flag or not Y/N	8.0	1.0	1.39			
+Sub
+Criterion
+ID	Sub Criterion
+Name or Description	Day of Marking	Aspect
+Type
+M = Meas
+J = Judg	Aspect - Description	Judg Score	Extra Aspect Description (Meas or Judg)
+OR
+Judgement Score Description (Judg only)	Requirement
+(Measurement Only)	WSOS Section	Calculation Row 
+(Export only)	Max
+Mark	Criterion C	Total
+Mark	25
+C1	ODD Flags	3											
+			M	ODD Flag01 - Note - 3600 CTF score/25% - multiply mark by 144 to get flag value - 15 Flags total= flag score/100/1.44 or flag*.0069444		Competitors successfully get flag in CTF	Got flag or not Y/N	4.0	1.0	0.28			
+			M	ODD Flag01H1		Competitors successfully get flag without H1	Add if hint NOT used	4.0	1.0	0.07			
+			M	ODDFlage01H2		Competitors successfully get flag without H2	Add if hint NOT used	4.0	1.0	0.34			
+			M	ODD Flag 02		Competitors successfully get flag in CTF	Got flag or not Y/N	6.0	1.0	0.56			
+			M	ODD Flag 02H1		Competitors successfully get flag without H1	Add if hint NOT used	6.0	1.0	0.14			
+			M	ODD Flag 02H2		Competitors successfully get flag without H2	Add if hint NOT used	6.0	1.0	0.69			
+			M	ODD Flag 03		Competitors successfully get flag in CTF	Got flag or not Y/N	4.0	1.0	0.56			
+			M	ODD Flag 03H1		Competitors successfully get flag without H1	Add if hint NOT used	4.0	1.0	0.14			
+			M	ODD Flag 03H2		Competitors successfully get flag without H2	Add if hint NOT used	4.0	1.0	0.69			
+			M	ODD Flag 04		Competitors successfully get flag in CTF	Got flag or not Y/N	4.0	1.0	0.97			
+			M	ODD Flag 04H1		Competitors successfully get flag without H1	Add if hint NOT used	4.0	1.0	0.24			
+			M	ODD Flag 04H2		Competitors successfully get flag without H2	Add if hint NOT used	4.0	1.0	1.22			
+			M	ODD Flag 05		Competitors successfully get flag in CTF	Got flag or not Y/N	4.0	1.0	0.42			
+			M	ODD Flag 05H1		Competitors successfully get flag without H1	Add if hint NOT used	4.0	1.0	0.1			
+			M	ODD Flag 05H2		Competitors successfully get flag without H2	Add if hint NOT used	4.0	1.0	0.52			
+			M	ODD Flag 06		Competitors successfully get flag in CTF	Got flag or not Y/N	6.0	1.0	0.42			
+			M	ODD Flag 06H1		Competitors successfully get flag without H1	Add if hint NOT used	6.0	1.0	0.1			
+			M	ODD Flag 06H2		Competitors successfully get flag without H2	Add if hint NOT used	6.0	1.0	0.52			
+			M	ODD Flag 07		Competitors successfully get flag in CTF	Got flag or not Y/N	6.0	1.0	0.62			
+			M	ODD Flag 07H1		Competitors successfully get flag without H1	Add if hint NOT used	6.0	1.0	0.07			
+			M	ODD Flag 08		Competitors successfully get flag in CTF	Got flag or not Y/N	7.0	1.0	1.25			
+			M	ODD Flag 08H1		Competitors successfully get flag without H1	Add if hint NOT used	7.0	1.0	0.14			
+			M	ODD Flag 09a		Competitors successfully get flag in CTF	Got flag or not Y/N - Mark split between 2 aspects both- are complete if flag found	6.0		1.5			
+			M	ODD Flag 09b		Competitors successfully get flag in CTF	Got flag or not Y/N - Mark split between 2 aspects both- are complete if flag found	6.0		1.0			
+			M	ODD Flag 09bH		Competitors successfully get flag without H1	Add if hint NOT used	6.0		0.28			
+			M	ODD Flag 10		Competitors successfully get flag in CTF	Got flag or not Y/N	6.0		1.74			
+			M	ODD Flag 11		Competitors successfully get flag in CTF	Got flag or not Y/N	3.0		1.04			
+			M	ODD Flag 12a		Competitors successfully get flag in CTF - Mark split between 2 aspects both- are complete if flag found	Got flag or not Y/N	6.0		1.43			
+			M	ODD Flag 12b		Competitors successfully get flag in CTF - Mark split between 2 aspects both- are complete if flag found	Got flag or not Y/N	6.0		1.0			
+C2	From Cache Cache portion of CTF	3											
+			M	CC Flag 01		Competitors successfully get flag in CTF	Got flag or not Y/N	5.0		1.74			
+			M	CC Flag 02a - Mark split between 2 aspects both- are complete if flag found		Competitors successfully get flag in CTF	Got flag or not Y/N	6.0		1.43			
+			M	CC Flag 02b - Mark split between 2 aspects both- are complete if flag found		Competitors successfully get flag in CTF	Got flag or not Y/N	6.0		1.0			
+			M	CC Flag 03a - Mark split between 2 aspects both- are complete if flag found		Competitors successfully get flag in CTF	Got flag or not Y/N	3.0		1.78			
+			M	CC Flag 03b - Mark split between 2 aspects both- are complete if flag found		Competitors successfully get flag in CTF	Got flag or not Y/N	3.0		1.0			
+Sub
+Criterion
+ID	Sub Criterion
+Name or Description	Day of Marking	Aspect
+Type
+M = Meas
+J = Judg	Aspect - Description	Judg Score	Extra Aspect Description (Meas or Judg)
+OR
+Judgement Score Description (Judg only)	Requirement
+(Measurement Only)	WSOS Section	Calculation Row 
+(Export only)	Max
+Mark	Criterion D	Total
+Mark	25
+D1	Blueday Flags	4											
+			M	CS Flag 01		Competitors successfully get flag in CTF	Got flag or not Y/N	1.0	1.0	0.54			
+			M	CS Flag 01H1		Competitors successfully get flag without H1	Add if hint NOT used	1.0	1.0	0.13			
+			M	CS Flag 01H2		Competitors successfully get flag without H2	Add if hint NOT used	1.0	1.0	0.66			
+			M	CS Flag 02		Competitors successfully get flag in CTF	Got flag or not Y/N	5.0	1.0	0.87			
+			M	CS Flag 02H1		Competitors successfully get flag without H1	Add if hint NOT used	5.0	1.0	0.22			
+			M	CS Flag 02H2		Competitors successfully get flag without H2	Add if hint NOT used	5.0	1.0	1.1			
+			M	CS Flag 03		Competitors successfully get flag in CTF	Got flag or not Y/N	5.0	1.0	0.69			
+			M	CS Flag 03H1		Competitors successfully get flag without H1	Add if hint NOT used	5.0	1.0	0.18			
+			M	CS Flag 03H2		Competitors successfully get flag without H2	Add if hint NOT used	5.0	1.0	0.88			
+			M	CS Flag 04		Competitors successfully get flag in CTF	Got flag or not Y/N	5.0	1.0	0.35			
+			M	CS Flag 04H1		Competitors successfully get flag without H1	Add if hint NOT used	5.0	1.0	0.09			
+			M	CS Flag 04H2		Competitors successfully get flag without H2	Add if hint NOT used	5.0	1.0	0.44			
+			M	CS Flag 05		Competitors successfully get flag in CTF	Got flag or not Y/N	5.0	1.0	0.35			
+			M	CS Flag 05H1		Competitors successfully get flag without H1	Add if hint NOT used	5.0	1.0	0.09			
+			M	CS Flag 05H2		Competitors successfully get flag without H2	Add if hint NOT used	5.0	1.0	0.44			
+			M	CS Flag 06		Competitors successfully get flag in CTF	Got flag or not Y/N	5.0	1.0	1.97			
+			M	CS Flag 06H1		Competitors successfully get flag without H1	Add if hint NOT used	5.0	1.0	0.22			
+			M	CS Flag 07a - Mark split between 2 aspects both- are complete if flag found		Competitors successfully get flag in CTF	Got flag or not Y/N	5.0	1.0	1.18			
+			M	CS Flag 07b - Mark split between 2 aspects both- are complete if flag found		Competitors successfully get flag in CTF	Got flag or not Y/N	5.0	1.0	1.18			
+			M	CS Flag 07H1		Competitors successfully get flag without H1	Add if hint NOT used	5.0	1.0	0.26			
+			M	CS Flag 08		Competitors successfully get flag in CTF	Got flag or not Y/N	7.0	1.0	1.97			
+			M	CS Flag 08H1		Competitors successfully get flag without H1	Add if hint NOT used	7.0	1.0	0.22			
+			M	CS Flag 09		Competitors successfully get flag in CTF	Got flag or not Y/N	5.0	1.0	1.19			
+			M	CS Flag 09H1		Competitors successfully get flag without H1	Add if hint NOT used	5.0	1.0	0.13			
+			M	CS Flag 10		Competitors successfully get flag in CTF	Got flag or not Y/N	8.0	1.0	1.75			
+			M	CS Flag 11		Competitors successfully get flag in CTF	Got flag or not Y/N	8.0	1.0	0.88			
+			M	CS Flag 12		Competitors successfully get flag in CTF	Got flag or not Y/N	1.0	1.0	1.32			
+			M	CS Flag 13a - Mark split between 2 aspects both- are complete if flag found		Competitors successfully get flag in CTF	Got flag or not Y/N	7.0	1.0	1.19			
+			M	CS Flag 13b - Mark split between 2 aspects both- are complete if flag found		Competitors successfully get flag in CTF	Got flag or not Y/N	7.0	1.0	1.0			
+			M	CS Flag 14a - Mark split between 2 aspects both- are complete if flag found		Competitors successfully get flag in CTF	Got flag or not Y/N	7.0	1.0	1.19			
+			M	CS Flag 14b - Mark split between 2 aspects both- are complete if flag found		Competitors successfully get flag in CTF	Got flag or not Y/N	7.0	1.0	1.0			
+			M	CS Flag 15		Competitors successfully get flag in CTF	Got flag or not Y/N	7.0	1.0	1.32			
+Sub
+Criterion
+ID	Sub Criterion
+Name or Description	Day of Marking	Aspect
+Type
+M = Meas
+J = Judg	Aspect - Description	Judg Score	Extra Aspect Description (Meas or Judg)
+OR
+Judgement Score Description (Judg only)	Requirement
+(Measurement Only)	WSOS Section	Calculation Row 
+(Export only)	Max
+Mark	Criterion E	Total
+Mark	0
+Sub
+Criterion
+ID	Sub Criterion
+Name or Description	Day of Marking	Aspect
+Type
+M = Meas
+J = Judg	Aspect - Description	Judg Score	Extra Aspect Description (Meas or Judg)
+OR
+Judgement Score Description (Judg only)	Requirement
+(Measurement Only)	WSOS Section	Calculation Row 
+(Export only)	Max
+Mark	Criterion F	Total
+Mark	0
+Sub
+Criterion
+ID	Sub Criterion
+Name or Description	Day of Marking	Aspect
+Type
+M = Meas
+J = Judg	Aspect - Description	Judg Score	Extra Aspect Description (Meas or Judg)
+OR
+Judgement Score Description (Judg only)	Requirement
+(Measurement Only)	WSOS Section	Calculation Row 
+(Export only)	Max
+Mark	Criterion G	Total
+Mark	0
+Sub
+Criterion
+ID	Sub Criterion
+Name or Description	Day of Marking	Aspect
+Type
+M = Meas
+J = Judg	Aspect - Description	Judg Score	Extra Aspect Description (Meas or Judg)
+OR
+Judgement Score Description (Judg only)	Requirement
+(Measurement Only)	WSOS Section	Calculation Row 
+(Export only)	Max
+Mark	Criterion H	Total
+Mark	0
+Sub
+Criterion
+ID	Sub Criterion
+Name or Description	Day of Marking	Aspect
+Type
+M = Meas
+J = Judg	Aspect - Description	Judg Score	Extra Aspect Description (Meas or Judg)
+OR
+Judgement Score Description (Judg only)	Requirement
+(Measurement Only)	WSOS Section	Calculation Row 
+(Export only)	Max
+Mark	Criterion I	Total
+Mark	0
+											Competition	Total
+Mark	100
+===SHEET: Calculations (rows=1 cols=4)===
+Pass/Fail	PASS_FAIL	True	
