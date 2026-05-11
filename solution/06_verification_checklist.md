@@ -19,7 +19,7 @@
 | 2.1 | Client3 | Connect OpenVPN with profile, user `VPNUser` / `P@ssw0rd` | Tunnel "Connected" |
 | 2.2 | Client3 CMD | `ping 192.168.2.10` | Replies (routes via tunnel) |
 | 2.3 | Client3 browser | `https://www.manila.com` | Loads (cert warning OK if self-signed) |
-| 2.4 | Client3 CMD | `nmap -sF -p 1-1024 <pfSense WAN IP>` | Snort Alerts tab shows `sid 100001 Possible FIN scan` |
+| 2.4 | Client3 CMD | `nmap -sF -p 1-1024 <pfSense WAN IP>` then `nmap -sX -p 1-1024 <pfSense WAN IP>` (XMAS scan — marking sheet mentions "Xmas tree scan") | Snort Alerts tab on pfSense shows `sid 100001` firing |
 | 2.5 | Client3 browser | `https://www.starcity.com.ph` (via VPN) | Blocked |
 
 ## Block 3 — LINSRV1 / DMZ Linux (A3: 0.25 + 0.25 + 0.25 + 0.25 + 0.4 + 0.75 + 0.25 + 0.25 + 0.4 + 0.25 + 0.4 + 0.4 marks)
@@ -68,7 +68,10 @@
 | 5.7 | Client2 logon as M004 | Wait 10 sec idle | Screen locks (autolock GPO) |
 | 5.8 | Client2 as M001 | Open Control Panel | **Blocked** by `restrict control panel` |
 | 5.9 | Client2 as M004 | Open Control Panel | **Allowed** (Exec is denied the restrict GPO) |
-| 5.10 | Client1 PuTTY | SSH as `mratt@manila.com` → port 2022 to LINSRV1 | Denied (not in AllowUsers C1 C2) — **expected**, this is just to confirm SSH ACL |
+| 5.10 | Client2 as any domain user | Open **Chrome** | Home page = `www.manila.com` (the `google` GPO worked) |
+| 5.11 | Client2 Chrome | Settings → search "home" | Home page URL field is **greyed out** (locked) |
+| 5.12 | Client2 CMD | `gpresult /r` | Output lists **Applied Group Policy Objects** including `google`, `certenroll`, `lockout`, `Banner`, `restrict control panel` |
+| 5.13 | Client1 PuTTY | SSH as `M001@manila.com` → port 2022 to LINSRV1 | Denied (not in AllowUsers C1 C2) — **expected**, this is just to confirm SSH ACL |
 
 ## Block 6 — Submission
 
@@ -80,27 +83,37 @@
 
 ---
 
-## Useful one-liners for fast re-check
+## Useful checks — pick GUI or commands
 
-```cmd
-:: Client side
-gpupdate /force && gpresult /v > %userprofile%\gpr.txt && notepad %userprofile%\gpr.txt
-ipconfig /all
-nslookup www.manila.com 192.168.2.10
-nslookup webtest.manila.com 192.168.2.10
-```
+These all check the same thing — use whichever you're faster at.
 
-```bash
-# LINSRV1
-realm list && sestatus && firewall-cmd --list-all --permanent
-ss -tlnp | grep -E ':(443|80|2022) '
-journalctl -u sshd --since "5 min ago"
-```
+### Client side (Client1 / Client2)
 
-```powershell
-# WINSRV1
-Get-GPO -All | Select DisplayName, Id
-Get-ADFineGrainedPasswordPolicy -Filter *
-Get-SmbShare pictures | fl *
-Get-Acl C:\shares\pictures\park.jpg -Audit | fl
-```
+| Check | GUI way (clicks) | Command (CMD) |
+|-------|------------------|---------------|
+| IP / DNS / DHCP source | Click the network icon in system tray → click connection name → **Properties** → scroll to "Properties" panel at bottom | `ipconfig /all` |
+| GPO applied? | Start → type `rsop.msc` (Resultant Set of Policy) → Enter → review tree | `gpresult /r` |
+| Refresh policies | (no clean GUI — must use command) | `gpupdate /force` |
+| Resolve a hostname | Start → type `cmd` → Enter (you're in CMD already) | `nslookup www.manila.com 192.168.2.10` |
+| See applied banner | Just sign out — the banner appears on the logon screen before the password box | (none) |
+
+### LINSRV1 (Linux server — terminal only, no desktop)
+
+| Check | Command (the only way on RHEL/Rocky server) |
+|-------|---------------------------------------------|
+| Domain joined? | `realm list` |
+| SELinux mode? | `sestatus` |
+| Firewall allowed services? | `firewall-cmd --list-all --permanent` |
+| Web server listening on 80/443? | `ss -tlnp \| grep -E ':(443\|80\|2022) '` |
+| Recent SSH attempts? | `journalctl -u sshd --since "5 min ago"` |
+
+> Linux servers don't ship with a desktop. Commands ARE the interface. The grader expects you to know these — they'll run the same commands during marking.
+
+### WINSRV1 (Windows server — has GUI for everything)
+
+| Check | GUI way (clicks) | PowerShell |
+|-------|------------------|------------|
+| List all GPOs | Server Manager → Tools → **Group Policy Management** → expand Forest → Domains → manila.com → **Group Policy Objects** → see all rows in right pane | `Get-GPO -All \| Select DisplayName` |
+| Fine-grained password policy exists? | Server Manager → Tools → **Active Directory Administrative Center** → Tree View → manila (local) → System → **Password Settings Container** → row count >= 1 | `Get-ADFineGrainedPasswordPolicy -Filter *` |
+| Share `pictures` exists with right perms? | Server Manager → **File and Storage Services** → **Shares** → click "pictures" → see Permissions in right pane | `Get-SmbShare pictures; Get-SmbShareAccess pictures` |
+| Audit set on park.jpg? | File Explorer → right-click `C:\shares\pictures\park.jpg` → **Properties** → **Security** → **Advanced** → **Auditing** tab | `(Get-Acl C:\shares\pictures\park.jpg -Audit).Audit` |

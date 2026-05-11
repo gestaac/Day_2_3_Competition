@@ -54,9 +54,11 @@ Delete the default "Default allow LAN to any" if present. Then add (top → bott
 2. **No "any any" rule.**
 
 ### Firewall → Rules → **Servers** (Interface) tab
-1. **Pass** — TCP/UDP, Src `Servers net`, Dst `any`, Dst port `53`. (DNS lookups for WINSRV1)
-2. **Pass** — any, Src `Servers net`, Dst `any` if you need WINSRV1 to reach Internet for time/updates. **Mark this rule "loose — tighten later"** — judgement grader looks at this.
-3. Better: explicit only — `Servers → LAN` for client mgmt is *not* in the PDF; don't add unless project says so.
+> ⚠ **Keep this tab almost empty.** Marking sheet rewards minimal rules here ("Should not be rules here, as no traffic should be initiated from DMZ"). The Servers VLAN serves clients — it should NOT need to initiate outbound traffic.
+
+1. **Pass** — UDP, Src `Servers net`, Dst `any`, Dst port `53`. Description: `Servers DNS lookup`. (Only because WINSRV1 itself does external DNS lookups; if it uses Root Hints or doesn't need external resolution you can omit even this.)
+2. **DO NOT add** an "any any" allow rule. If pfSense already created one as default ("Default allow LAN to any" cloned onto Servers), **delete it**.
+3. **DO NOT add** `Servers → LAN` rules unless the PDF asks (it does not).
 
 ## 5. NAT — port forward — 0.6 marks
 - **Firewall → NAT → Port Forward → Add**:
@@ -120,24 +122,63 @@ Delete the default "Default allow LAN to any" if present. Then add (top → bott
 - Copy the file to Client3.
 
 ## 9. Snort IDS — 0.7 + 0.4 marks
-- **Services → Snort → Global Settings**:
-  - ☑ Snort VRT rules (sign up free at snort.org if you have time — or skip; you can use the custom rule alone).
-  - Save.
-- **Snort Interfaces → Add**:
-  - Interface **WAN**. Description `WAN IDS`. ☑ Enable. **Save**.
-- Click pencil on the new WAN entry → **WAN Categories** → don't enable Snort VRT/ETOpen if you don't have a code; that's fine. Save.
-- **WAN Rules → category dropdown → `custom.rules`** (or similar):
-  - Paste this rule (replace `a.b.c.d/24` with **your actual WAN subnet** — check **Interfaces → WAN** for the address):
-    ```
-    alert tcp any any <> 172.16.1.0/24 any (flags: F; msg:"Possible FIN scan"; sid:100001; rev:1;)
-    ```
-  - Save.
-- Optional starcity logging rule (HTTP content-match — may need ET rules; otherwise relying on firewall block is fine):
-  ```
-  alert tcp any any -> any 80 (msg:"Access to starcity"; content:"starcity.com.ph"; http_header; sid:100002; rev:1;)
-  ```
-- Back to **Snort Interfaces** → **Start** the WAN interface (▶ icon).
-- Verify by watching **Alerts** tab while you run nmap from Client3.
+
+> The Snort **navigation** is all clicks. The **rule itself** is a one-line text string that you paste into a text box — there's no point-and-click rule builder for that (it doesn't exist in pfSense). Every step below is a button or field, not a command line.
+
+### 9.1 First, look up your actual WAN subnet (you'll need this number for the rule)
+1. In the pfSense top menu click **Interfaces** → **WAN**. Scroll to the **General Configuration** section.
+2. Note the **IPv4 Configuration Type** value. If it shows DHCP, the assigned IP is shown at top of the page header. Write down the subnet (example: if WAN IP is `172.16.1.5/24`, the subnet is `172.16.1.0/24`). You'll paste this in place of `172.16.1.0/24` in the rule below.
+
+### 9.2 Enable Snort globally
+1. From the pfSense top menu click **Services** → click **Snort**.
+2. Click the **Global Settings** tab (it's the default tab when you arrive).
+3. Scroll the page. Find the checkbox **Enable Snort VRT** (snort.org rules) — leave it **unticked** unless you already have an OINK code. We're using a custom rule, not VRT.
+4. Scroll to the bottom → click the **Save** button.
+
+### 9.3 Add the WAN interface to Snort
+1. Click the **Snort Interfaces** tab (top of the Snort page).
+2. The list is empty. Click the **+ Add** button (right side, blue/green plus icon).
+3. A configuration form appears. Fill in:
+   - **Enable** checkbox: ✓ ticked.
+   - **Interface** dropdown: choose **WAN**.
+   - **Description**: type `WAN IDS`.
+   - Leave the rest at default.
+4. Scroll down → click **Save**.
+5. You're now back at the Snort Interfaces tab. The WAN row appears with a red ⏹ "stopped" icon. Leave it stopped for now — we'll add the rule first, then start it.
+
+### 9.4 Add the custom FIN-scan rule
+1. Still on the Snort Interfaces tab, in the **WAN** row click the small **pencil ✏ edit icon** on the right.
+2. Inside the WAN edit page, click the **WAN Rules** tab (these tabs are at the top of the WAN edit area: "WAN Settings | WAN Categories | WAN Rules | WAN Variables | …").
+3. There's a **Category Selection** dropdown at the top of the page. Click it and choose **custom.rules** from the list. (If you don't see custom.rules yet, choose any category first → click Save → come back and re-open this dropdown.)
+4. Below the dropdown there is a big empty **text area** labelled something like "Defined Custom Rules" or "Custom Rules".
+5. **Click inside that text area**, then paste the rule below. The only thing you must change: replace `172.16.1.0/24` with the actual WAN subnet you wrote down in step 9.1.
+   ```
+   alert tcp any any <> 172.16.1.0/24 any (flags: F; msg:"Possible FIN scan"; sid:100001; rev:1;)
+   ```
+6. Below the FIN rule, press Enter to start a new line, then paste this second rule (covers the XMAS scan test the marking sheet describes — same `sid:100001`):
+   ```
+   alert tcp any any <> 172.16.1.0/24 any (flags: FPU; msg:"Possible XMAS Scan"; sid:100001; rev:2;)
+   ```
+7. Scroll to the bottom of the page → click the **Save** button.
+
+> **Why two rules?** PDF says `flags: F` (FIN only). Marking sheet test uses `nmap -sX` (XMAS = F+P+U). Strict `flags: F` won't match XMAS. With both rules, sid:100001 fires whichever scan the grader uses.
+
+### 9.5 (Optional) Add a starcity-access logging rule
+Only if you have time — it's a nice extra. Click inside the same text area, new line, paste:
+```
+alert tcp any any -> any 80 (msg:"Access to starcity"; content:"starcity.com.ph"; http_header; sid:100002; rev:1;)
+```
+Click **Save**.
+
+### 9.6 Start Snort on WAN
+1. Click the **Snort Interfaces** tab at the top to go back to the list.
+2. In the WAN row, click the small **▶ (play/start)** icon at the right. The red ⏹ becomes a green ▶ when running.
+3. Wait ~30 seconds. The status column should say **Started**.
+
+### 9.7 Verify by watching alerts
+1. Click the **Alerts** tab (top of Snort page).
+2. **Interface to Inspect** dropdown → choose **WAN**.
+3. This page is initially empty. Keep it open. Later, when you run `nmap -sF` or `nmap -sX` from Client3 (verification step 2.4 in file 06), an alert with **sid 100001** appears here within a few seconds.
 
 ## 10. Final pfSense sanity check
 - Diagnostics → Ping → ping `192.168.2.10` from interface `Servers`.

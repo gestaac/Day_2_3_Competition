@@ -97,6 +97,35 @@ realm list                       # should show manila.com / configured
 id C1                            # should return uid + groups including "domain users", "IT"
 ```
 
+### Fallback — if `realm join` keeps failing
+
+> PDF p.12: *"If domain integration fails, create local users C1 and C2 matching the expected credentials."* — this is the official fallback. You **still get most of the A3 marks** with local users; you only lose the "domain joined" specific aspect (~0.4 mark out of 3 for the whole LINSRV1 block).
+
+If domain join keeps failing after 10 minutes of trying, switch to local users:
+
+```bash
+# Create local C1, C2 with the same password the project uses
+useradd -m -s /bin/bash C1
+useradd -m -s /bin/bash C2
+echo "C1:P@ssw0rd" | chpasswd
+echo "C2:P@ssw0rd" | chpasswd
+
+# Create a local IT group and add them
+groupadd IT
+usermod -aG IT C1
+usermod -aG IT C2
+```
+
+Steps 4–9 below still work — sudoers, SSH, firewall, password policy, httpd all apply the same. The only change: in `/etc/pam.d/httpd` (Step 8) keep `pam_sss.so` but also add fallback to local PAM:
+```
+auth      sufficient   pam_sss.so
+auth      sufficient   pam_unix.so
+account   sufficient   pam_sss.so
+account   sufficient   pam_unix.so
+```
+
+Tell the grader you used the fallback — they explicitly allow this path.
+
 ---
 
 ## Step 4 — Sudo only for IT group (C1, C2)

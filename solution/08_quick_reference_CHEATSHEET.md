@@ -69,13 +69,14 @@ ssh -p 2022 C1@192.168.1.10
 # password: P@ssw0rd
 ```
 
-## GPO names (all six expected)
+## GPO names (all SEVEN expected — note `google` is marking-sheet-only, NOT in the PDF)
 1. `lockout` — 3 fails, 60s
 2. `Banner` — title `WorldSkills ASEAN Manila`, text `Authorized access only`
 3. `restrict control panel` — deny Executive
 4. `disabled add and remove program panel` — apply to Executive only
 5. `autolock` — 10s screen, Executive only
 6. `certenroll` — autoenroll computer + user
+7. **`google`** — Chrome home page = `www.manila.com`, locked from change (marking sheet A4 line 126, A7 home page check)
 
 ## Share spec
 - Path: `C:\shares\pictures` → SMB name `pictures`

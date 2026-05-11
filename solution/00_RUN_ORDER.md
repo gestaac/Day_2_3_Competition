@@ -2,6 +2,8 @@
 
 > **Hard rule:** never change a password that the project did not explicitly ask you to change. The graders log in as `Administrator` / `P@ssw0rd`, `root` / `P@ssw0rd`, and domain users with `P@ssw0rd`. Break that and you lose marks even on tasks you finished.
 
+> 🚨 **Marking-sheet-only requirement (NOT in the PDF):** GPO called **`google`** that sets Chrome home page to `www.manila.com` and locks it. Worth ~0.7 marks. Easy to forget because the PDF doesn't list it. **Don't forget Task 8B in `02_winsrv1_gpo_setup.md`.**
+
 ## Team setup — READ FIRST
 
 You and your teammate share **one** set of VMs hosted on the ESXi server (PC3 — `192.168.1.1`):
@@ -18,9 +20,12 @@ Before you do anything else, open **`09_team_split_PC1_PC2.md`** and agree with 
 The order below is the **dependency** order — parallel work between PC1 and PC2 is encouraged within each step.
 
 ## Pre-flight (10 min)
-1. Power on all VMs **except WINSRV4** (Offline Root CA — leave it off).
-2. From **Client1** open a CMD: `ping 192.168.2.10`, `ping 192.168.1.10`, `ping 172.16.100.254`. All three must respond.
-3. On **WINSRV1**, open **Server Manager → Tools menu → Active Directory Users and Computers**. Expand `manila.com` in the left tree. Verify users in Table 3 of the PDF (M001–M004, S001, C1, C2) exist. If missing, follow `03_winsrv1_create_users.md`.
+1. Connect VMware Workstation to ESXi at `192.168.1.1` (`wsauser`/`Andres@9V4`). See `10_install_guides.md` Section 0 if you forget the steps.
+2. Power on all VMs **except WINSRV4** (Offline Root CA — leave it off).
+3. From **Client1** open a CMD: `ping 192.168.2.10`, `ping 192.168.1.10`, `ping 172.16.100.254`. All three must respond.
+4. On **WINSRV1**, open **Server Manager → Tools menu → Active Directory Users and Computers**. Expand `manila.com` in the left tree. Verify users in Table 3 of the PDF (M001–M004, S001, C1, C2) exist. If missing, follow `03_winsrv1_create_users.md`.
+5. On **pfSense** (from Client1 → `https://172.16.100.254`): Top menu → System → Package Manager → Installed Packages. Confirm **`snort`** and **`openvpn-client-export`** are installed. If missing, see `10_install_guides.md` Section 2.
+6. **If any VM is missing or won't boot** → see `10_install_guides.md` Section 1 (decision tree) before doing anything else.
 
 ## Order of operations (parallelisable but ordered for dependency)
 

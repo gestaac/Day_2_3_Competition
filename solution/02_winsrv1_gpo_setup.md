@@ -233,6 +233,71 @@ Log on Client2 as M004 (Executive) → wait 10 seconds → screen should lock an
 
 ---
 
+## Task 8B — GPO `google` (Chrome home page = www.manila.com, locked)
+
+> **Important — this GPO is NOT in the PDF tasks list, but the MARKING SHEET tests for it explicitly.** Worth ~0.7 marks across A4 + A7 (home page set, GPO named "google", locked from change).
+
+> Marking-sheet quote: *"verify that a google policy exists at the domain level and is set to control the homepage… setting at: computer configuration > administrative templates > google > startup, home page and new tab page > configure the home page URL > www.manila.com"*
+
+> The grader test is: on Client2, open Chrome → home page must be `www.manila.com`. Try to change it via Chrome settings → it should be greyed out / revert on reopen.
+
+### Two ways to do it — pick the one that works on your server
+
+#### Option A — If Chrome ADMX templates are already on WINSRV1 (preferred — matches the marking-sheet wording exactly)
+
+1. Quick check first: open **File Explorer** → browse to `C:\Windows\PolicyDefinitions\`. Look for `chrome.admx` (or `google.admx`). If present → use this option. If not → use Option B.
+2. In **Group Policy Management** → right-click **manila.com** → **Create a GPO in this domain, and Link it here…** → Name = `google` → OK.
+3. Right-click the new GPO → **Edit…**
+4. In the editor, expand: **Computer Configuration** → **Policies** → **Administrative Templates** → **Google** → **Google Chrome** → **Startup, Home page and new tab page**.
+5. In the right pane:
+   - Double-click **Configure the home page URL** → **Enabled** → in the "Home page URL" box type `https://www.manila.com` → OK.
+   - Double-click **Use New Tab Page as homepage** → **Disabled** → OK.
+   - Double-click **Action on startup** → **Enabled** → dropdown → **Open a list of URLs** → OK.
+   - Double-click **URLs to open on startup** → **Enabled** → click **Show…** → row 1 → `https://www.manila.com` → OK → OK.
+6. Close the editor.
+
+#### Option B — If Chrome ADMX is missing (registry-based — works without any template install)
+
+This pushes the same Chrome policy registry keys that the ADMX template would push. Chrome reads them identically.
+
+1. In **Group Policy Management** → right-click **manila.com** → **Create a GPO in this domain, and Link it here…** → Name = `google` → OK.
+2. Right-click the new GPO → **Edit…**
+3. In the editor, expand: **Computer Configuration** → **Preferences** → **Windows Settings** → right-click **Registry** → **New** → **Registry Item**.
+4. Fill in:
+   - **Action:** Update
+   - **Hive:** HKEY_LOCAL_MACHINE
+   - **Key Path:** `Software\Policies\Google\Chrome`
+   - **Value name:** `HomepageLocation`
+   - **Value type:** REG_SZ
+   - **Value data:** `https://www.manila.com`
+   - OK.
+5. Repeat **New → Registry Item** for each row below (same Hive and Key Path):
+
+   | Value name | Value type | Value data |
+   |------------|-----------|------------|
+   | `HomepageIsNewTabPage` | REG_DWORD | `0` |
+   | `ShowHomeButton` | REG_DWORD | `1` |
+   | `RestoreOnStartup` | REG_DWORD | `4` |
+
+6. Now add the startup URL list. Right-click **Registry** → **New** → **Registry Item**:
+   - **Hive:** HKEY_LOCAL_MACHINE
+   - **Key Path:** `Software\Policies\Google\Chrome\RestoreOnStartupURLs`
+   - **Value name:** `1`
+   - **Value type:** REG_SZ
+   - **Value data:** `https://www.manila.com`
+   - OK.
+7. Close the editor.
+
+### Verify
+1. On Client2, open **Command Prompt** → run `gpupdate /force` → wait for "successfully updated".
+2. Open Chrome → it should open to `www.manila.com`.
+3. Click the 3-dot menu → **Settings** → search for "home" → the Home page URL field should be **greyed out** (locked by policy).
+4. On Client2 run `gpresult /r` in CMD → under "Applied Group Policy Objects" you should see `google`.
+
+> If Chrome was already running on Client2 with a custom home page, close ALL Chrome windows, then `gpupdate /force`, then reopen Chrome.
+
+---
+
 ## Task 9 — Share `\\WINSRV1\pictures` with NTFS + share permissions
 
 > PDF p.12: share `pictures` at `C:\shares\pictures` — Marketing = R, Executive = FC, no one else.
@@ -333,8 +398,8 @@ On WINSRV1, then on each Client1, Client2, Client3. Sign out and sign in again �
 
 | Check | Where to look (clicks) | What you should see |
 |-------|------------------------|---------------------|
-| All GPOs created | Server Manager → Tools → **Group Policy Management** → expand Forest → Domains → manila.com → **Group Policy Objects** | A row for each: `Banner`, `autolock`, `certenroll`, `disabled add and remove program panel`, `lockout`, `restrict control panel`, plus the two defaults. |
-| All GPOs linked at the domain | Group Policy Management → click **manila.com** in the tree → look at the right pane | Each of the 6 new GPOs listed as linked, **Link Enabled = Yes**. |
+| All GPOs created | Server Manager → Tools → **Group Policy Management** → expand Forest → Domains → manila.com → **Group Policy Objects** | A row for each: `Banner`, `autolock`, `certenroll`, `disabled add and remove program panel`, `google`, `lockout`, `restrict control panel`, plus the two defaults. |
+| All GPOs linked at the domain | Group Policy Management → click **manila.com** in the tree → look at the right pane | Each of the **7** new GPOs listed as linked, **Link Enabled = Yes**. |
 | Fine-Grained Password Policy | Server Manager → Tools → **Active Directory Administrative Center** → Tree View → manila (local) → System → **Password Settings Container** | `ExecutivePSO` listed. |
 | Share exists | Server Manager → **File and Storage Services** → **Shares** | A row "pictures" with path `C:\shares\pictures`. |
 | File audit on park.jpg | File Explorer → right-click `C:\shares\pictures\park.jpg` → Properties → Security → Advanced → Auditing tab | A Success entry for "Everyone" / Read data. |
