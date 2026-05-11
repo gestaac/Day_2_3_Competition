@@ -52,25 +52,25 @@ Handles everything **inside the Servers VLAN** and the LAN client side.
 
 | Order | File | What |
 |-------|------|------|
-| 1 | `03_winsrv1_create_users.md` | Create AD users/groups (only if missing) |
-| 2 | `02_winsrv1_gpo_setup.md` | All 6 GPOs + PSO + share + audit |
-| 3 | `05_winsrv3_iis_cert.md` | WINSRV3 IIS site + cert + DNS record |
-| 4 | `06_verification_checklist.md` **Blocks 4 & 5** | Verify on Client2 (logon banner, autolock, share access, cert) |
+| 1 | `04_winsrv1_create_users.md` | Create AD users/groups (only if missing) |
+| 2 | `03_winsrv1_gpo_setup.md` | All 6 GPOs + PSO + share + audit |
+| 3 | `06_winsrv3_iis_cert.md` | WINSRV3 IIS site + cert + DNS record |
+| 4 | `07_verification_checklist.md` **Blocks 4 & 5** | Verify on Client2 (logon banner, autolock, share access, cert) |
 
 ### PC2 (You) — "Network + DMZ track"
 Handles **pfSense and Linux** plus external client.
 
 | Order | File | What |
 |-------|------|------|
-| 1 | `01_pfsense_checklist.md` **Sections 1–6** | Admin password, DHCP, base firewall rules, NAT, install packages |
-| 2 | `04_linsrv1_setup.md` | LINSRV1 full RHEL setup |
-| 3 | `01_pfsense_checklist.md` **Sections 7–10** | OpenVPN (needs PC1's AD ready), Snort, starcity block |
-| 4 | `06_verification_checklist.md` **Blocks 1, 2 & 3** | Verify on Client1 (firewall) + Client3 (VPN, nmap) + LINSRV1 |
+| 1 | `02_pfsense_checklist.md` **Sections 1–6** | Admin password, DHCP, base firewall rules, NAT, install packages |
+| 2 | `05_linsrv1_setup.md` | LINSRV1 full RHEL setup |
+| 3 | `02_pfsense_checklist.md` **Sections 7–10** | OpenVPN (needs PC1's AD ready), Snort, starcity block |
+| 4 | `07_verification_checklist.md` **Blocks 1, 2 & 3** | Verify on Client1 (firewall) + Client3 (VPN, nmap) + LINSRV1 |
 
 ### Joint at the end
 | Order | File | What |
 |-------|------|------|
-| Last | `07_GPO_recommendations_submission.md` | One of you writes the .docx — decide who has better English/typing. The other keeps fixing remaining marks. |
+| Last | `08_GPO_recommendations_submission.md` | One of you writes the .docx — decide who has better English/typing. The other keeps fixing remaining marks. |
 
 ---
 
@@ -79,7 +79,7 @@ Handles **pfSense and Linux** plus external client.
 These are the **hand-off moments**. Stop and confirm with your teammate before continuing past each one.
 
 ### 🟢 Sync 1 — after ~20 min
-**PC1 must have finished:** `03_winsrv1_create_users.md` (Executive, Marketing, IT, VPNGroup, VPNUser all exist).
+**PC1 must have finished:** `04_winsrv1_create_users.md` (Executive, Marketing, IT, VPNGroup, VPNUser all exist).
 **Why:** PC2 cannot configure pfSense OpenVPN LDAP until VPNUser exists. PC2 cannot let LINSRV1 join the domain in a useful way until the IT group exists for sudo.
 
 > **PC2 keeps working on:** pfSense sections 1–5 (admin pwd, DHCP, base firewall rules, NAT, NO VPN/Snort yet) — none of those need AD.
@@ -95,7 +95,7 @@ These are the **hand-off moments**. Stop and confirm with your teammate before c
 **Why:** From here, both of you can start the verification block on Clients.
 
 ### 🟢 Sync 4 — final check
-Walk through `06_verification_checklist.md` together. PC1 reads each row, PC2 performs the test on the relevant client/VM. Tick or fix.
+Walk through `07_verification_checklist.md` together. PC1 reads each row, PC2 performs the test on the relevant client/VM. Tick or fix.
 
 ---
 
@@ -107,7 +107,7 @@ Walk through `06_verification_checklist.md` together. PC1 reads each row, PC2 pe
 
 3. **DNS edits on WINSRV1.** PC1 owns these (since they need to add the `webtest` A record for IIS anyway). PC2 just says "please also add `linsrv1` and `www.manila.com` A records pointing to 192.168.1.10" — PC1 adds them once.
 
-4. **AD account password resets.** Don't both try to reset M004's password. PC1 does it once per `02_winsrv1_gpo_setup.md` Task 2.
+4. **AD account password resets.** Don't both try to reset M004's password. PC1 does it once per `03_winsrv1_gpo_setup.md` Task 2.
 
 5. **VM console sharing.** When you both have the same VM console open, the cursor fights. If you need to confirm something on PC1's VM, message your teammate first instead of grabbing the console.
 
@@ -118,9 +118,9 @@ Walk through `06_verification_checklist.md` together. PC1 reads each row, PC2 pe
 ## What if your teammate finishes early / is stuck?
 
 **Teammate finished their track:**
-- They can pick up Block 4/5 of `06_verification_checklist.md` from your side, OR
-- Start drafting the `07_GPO_recommendations_submission.md` document, OR
-- Browse `08_quick_reference_CHEATSHEET.md` and double-check your config matches.
+- They can pick up Block 4/5 of `07_verification_checklist.md` from your side, OR
+- Start drafting the `08_GPO_recommendations_submission.md` document, OR
+- Browse `09_quick_reference_CHEATSHEET.md` and double-check your config matches.
 
 **Teammate is stuck:**
 - Don't wait silently — say "I'm done with X, what do you need?"

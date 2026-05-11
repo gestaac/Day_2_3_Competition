@@ -105,7 +105,7 @@ Skip this section unless the firewall VM literally doesn't exist or refuses to b
     - OPT1 (DMZ) → static `192.168.1.254/24` → same.
     - OPT2 (Servers) → static `192.168.2.254/24` → same.
     - WAN → leave DHCP.
-12. Open `https://172.16.100.254` from Client1 browser → continue with `01_pfsense_checklist.md`.
+12. Open `https://172.16.100.254` from Client1 browser → continue with `02_pfsense_checklist.md`.
 
 > If the WAN interface ends up swapped with another (very common), you can re-run **option 1 Assign Interfaces** at the console any time without reinstalling.
 
@@ -136,7 +136,7 @@ Skip this section unless the firewall VM literally doesn't exist or refuses to b
    - **User Creation** → User name `competitor`, Full name `competitor`, password `P@ssw0rd`, ☑ Make this user administrator → Done.
 4. Click **Begin Installation**. Wait ~10 minutes.
 5. When done, click **Reboot System**. Eject ISO before it reboots.
-6. After reboot, log in as root → continue with `04_linsrv1_setup.md`.
+6. After reboot, log in as root → continue with `05_linsrv1_setup.md`.
 
 > For the **ISP** simulator VM: same install, but IP `198.51.100.1/24` (or whatever the venue's "Internet" subnet is — check with the expert). After install, install bind (`dnf -y install bind`) and configure DNS for `www.nationalmuseum.gov.ph` and `www.starcity.com.ph` plus a simple http server. **Usually the ISP VM is provided pre-built** — don't waste time building it unless absolutely necessary.
 
@@ -185,7 +185,7 @@ Skip this section unless the firewall VM literally doesn't exist or refuses to b
 8. Click Next through (DNS delegation warning is fine, NetBIOS = `MANILA`, paths = defaults, Review = OK, Prerequisites checks → ignore warnings).
 9. Click **Install**. Server reboots automatically.
 10. After reboot, log in as `MANILA\Administrator` / `P@ssw0rd`.
-11. Now continue with `03_winsrv1_create_users.md` and `02_winsrv1_gpo_setup.md`.
+11. Now continue with `04_winsrv1_create_users.md` and `03_winsrv1_gpo_setup.md`.
 
 ### AD Certificate Services on WINSRV3 (Issuing CA)
 Doing this from scratch is complex. The PDF says it's pre-configured. If you absolutely have to rebuild:

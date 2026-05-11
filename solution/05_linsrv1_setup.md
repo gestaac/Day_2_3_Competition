@@ -373,4 +373,4 @@ echo "[selinux]"; sestatus
 echo "[httpd]"  ; ss -tlnp | grep -E ':(80|443) '
 ```
 
-Cross-check each line against the **`06_verification_checklist.md` Block 3**.
+Cross-check each line against the **`07_verification_checklist.md` Block 3**.

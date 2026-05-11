@@ -8,7 +8,12 @@
       "PowerShell(python -c \"import pypdf; print\\('pypdf OK'\\); import openpyxl; print\\('openpyxl OK'\\)\")",
       "PowerShell(python -c \"from pypdf import PdfReader; r = PdfReader\\(r'C:\\\\Users\\\\CHESTER BAUTISTA\\\\Day_2_3_Competition\\\\WSA2025_TP54_MA2_actual_en_final \\(1\\).pdf'\\); print\\('PAGES:', len\\(r.pages\\)\\)\")",
       "PowerShell(python \"C:\\\\Users\\\\CHESTER BAUTISTA\\\\Day_2_3_Competition\\\\_extract.py\")",
-      "PowerShell(python \"C:\\\\Users\\\\CHESTER BAUTISTA\\\\Day_2_3_Competition\\\\_extract_xlsx.py\")"
+      "PowerShell(python \"C:\\\\Users\\\\CHESTER BAUTISTA\\\\Day_2_3_Competition\\\\_extract_xlsx.py\")",
+      "Bash(mv 10_install_guides.md tmp_install.md)",
+      "Bash(mv 09_team_split_PC1_PC2.md 10_team_split_PC1_PC2.md)",
+      "Bash(mv 08_quick_reference_CHEATSHEET.md 09_quick_reference_CHEATSHEET.md)",
+      "Bash(mv 07_GPO_recommendations_submission.md 08_GPO_recommendations_submission.md)",
+      "Bash(mv 06_verification_checklist.md 07_verification_checklist.md)"
     ]
   }
 }

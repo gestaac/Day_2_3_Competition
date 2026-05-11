@@ -2,7 +2,7 @@
 
 > **Hard rule:** never change a password that the project did not explicitly ask you to change. The graders log in as `Administrator` / `P@ssw0rd`, `root` / `P@ssw0rd`, and domain users with `P@ssw0rd`. Break that and you lose marks even on tasks you finished.
 
-> 🚨 **Marking-sheet-only requirement (NOT in the PDF):** GPO called **`google`** that sets Chrome home page to `www.manila.com` and locks it. Worth ~0.7 marks. Easy to forget because the PDF doesn't list it. **Don't forget Task 8B in `02_winsrv1_gpo_setup.md`.**
+> 🚨 **Marking-sheet-only requirement (NOT in the PDF):** GPO called **`google`** that sets Chrome home page to `www.manila.com` and locks it. Worth ~0.7 marks. Easy to forget because the PDF doesn't list it. **Don't forget Task 8B in `03_winsrv1_gpo_setup.md`.**
 
 ## Team setup — READ FIRST
 
@@ -11,7 +11,7 @@ You and your teammate share **one** set of VMs hosted on the ESXi server (PC3 �
 - **PC2** = you (`competitor1b`)
 - **PC3** = ESXi server holding all the VMs and ISOs
 
-Before you do anything else, open **`09_team_split_PC1_PC2.md`** and agree with your teammate on who does which track. It tells you:
+Before you do anything else, open **`10_team_split_PC1_PC2.md`** and agree with your teammate on who does which track. It tells you:
 - How to connect from your laptop to the VMs on PC3 (VMware Workstation → Connect to Server).
 - Which files PC1 owns vs which files PC2 owns.
 - The 4 sync points where you wait for each other.
@@ -20,24 +20,24 @@ Before you do anything else, open **`09_team_split_PC1_PC2.md`** and agree with 
 The order below is the **dependency** order — parallel work between PC1 and PC2 is encouraged within each step.
 
 ## Pre-flight (10 min)
-1. Connect VMware Workstation to ESXi at `192.168.1.1` (`wsauser`/`Andres@9V4`). See `10_install_guides.md` Section 0 if you forget the steps.
+1. Connect VMware Workstation to ESXi at `192.168.1.1` (`wsauser`/`Andres@9V4`). See `01_install_guides.md` Section 0 if you forget the steps.
 2. Power on all VMs **except WINSRV4** (Offline Root CA — leave it off).
 3. From **Client1** open a CMD: `ping 192.168.2.10`, `ping 192.168.1.10`, `ping 172.16.100.254`. All three must respond.
-4. On **WINSRV1**, open **Server Manager → Tools menu → Active Directory Users and Computers**. Expand `manila.com` in the left tree. Verify users in Table 3 of the PDF (M001–M004, S001, C1, C2) exist. If missing, follow `03_winsrv1_create_users.md`.
-5. On **pfSense** (from Client1 → `https://172.16.100.254`): Top menu → System → Package Manager → Installed Packages. Confirm **`snort`** and **`openvpn-client-export`** are installed. If missing, see `10_install_guides.md` Section 2.
-6. **If any VM is missing or won't boot** → see `10_install_guides.md` Section 1 (decision tree) before doing anything else.
+4. On **WINSRV1**, open **Server Manager → Tools menu → Active Directory Users and Computers**. Expand `manila.com` in the left tree. Verify users in Table 3 of the PDF (M001–M004, S001, C1, C2) exist. If missing, follow `04_winsrv1_create_users.md`.
+5. On **pfSense** (from Client1 → `https://172.16.100.254`): Top menu → System → Package Manager → Installed Packages. Confirm **`snort`** and **`openvpn-client-export`** are installed. If missing, see `01_install_guides.md` Section 2.
+6. **If any VM is missing or won't boot** → see `01_install_guides.md` Section 1 (decision tree) before doing anything else.
 
 ## Order of operations (parallelisable but ordered for dependency)
 
 | Step | Where | What | File |
 |------|-------|------|------|
-| 1 | WINSRV1 console | Create AD users/groups (only if missing), VPNGroup/VPNUser, password policies, GPOs, share, audit | `03_winsrv1_create_users.md` then `02_winsrv1_gpo_setup.md` |
-| 2 | WINSRV3 console | Issue Web Server cert + bind IIS HTTPS for `webtest.manila.com` | `05_winsrv3_iis_cert.md` |
-| 3 | pfSense WebGUI from Client1 | Admin pwd, DHCP, firewall rules, NAT, packages, OpenVPN, Snort, block starcity | `01_pfsense_checklist.md` |
-| 4 | LINSRV1 console (or SSH) | Domain join, sudo, SSH hardening, firewalld, password policy, httpd HTTPS, SELinux | `04_linsrv1_setup.md` |
-| 5 | Client3 | Install OpenVPN profile, connect, run nmap FIN scan | `01_pfsense_checklist.md` Phase 5 |
-| 6 | Client1 / Client2 | Verify everything end-to-end | `06_verification_checklist.md` |
-| 7 | Competitor laptop desktop | Save deliverable doc | `07_GPO_recommendations_submission.md` |
+| 1 | WINSRV1 console | Create AD users/groups (only if missing), VPNGroup/VPNUser, password policies, GPOs, share, audit | `04_winsrv1_create_users.md` then `03_winsrv1_gpo_setup.md` |
+| 2 | WINSRV3 console | Issue Web Server cert + bind IIS HTTPS for `webtest.manila.com` | `06_winsrv3_iis_cert.md` |
+| 3 | pfSense WebGUI from Client1 | Admin pwd, DHCP, firewall rules, NAT, packages, OpenVPN, Snort, block starcity | `02_pfsense_checklist.md` |
+| 4 | LINSRV1 console (or SSH) | Domain join, sudo, SSH hardening, firewalld, password policy, httpd HTTPS, SELinux | `05_linsrv1_setup.md` |
+| 5 | Client3 | Install OpenVPN profile, connect, run nmap FIN scan | `02_pfsense_checklist.md` Phase 5 |
+| 6 | Client1 / Client2 | Verify everything end-to-end | `07_verification_checklist.md` |
+| 7 | Competitor laptop desktop | Save deliverable doc | `08_GPO_recommendations_submission.md` |
 
 ## Why this order
 - WINSRV1 first → AD must exist before LINSRV1 can `realm join` and before pfSense OpenVPN can LDAP-bind.
