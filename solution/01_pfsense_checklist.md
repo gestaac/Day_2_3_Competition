@@ -71,7 +71,7 @@ Delete the default "Default allow LAN to any" if present. Then add (top → bott
 - Wait for both to finish (status = installed).
 
 ## 7. Import WINSRV3 root + issuing CA — 0.4 marks (OpenVPN PKI cert)
-- On **WINSRV3** open `certsrv.msc` → right-click CA → **All Tasks → Properties → View Certificate → Details → Copy to File** → Base-64 .cer. Repeat for root (export from WINSRV4 if available; otherwise grab from WINSRV3's chain).
+- On **WINSRV3**: open **Server Manager → Tools → Certification Authority**. In the left tree, right-click your CA name → **Properties** → **General** tab → click **View Certificate** → click the **Details** tab → click **Copy to File…** → Next → choose **Base-64 encoded X.509 (.CER)** → Next → save to `C:\Users\Administrator\Desktop\issuing.cer` → Finish. Repeat for the **root** CA: in the same Certificate window's **Certification Path** tab, double-click the topmost cert (manila Root CA / WINSRV4) → Details → Copy to File → same Base-64 export, save as `root.cer`.
 - Copy both `.cer` files to Client1, then to pfSense via:
 - pfSense **System → Cert Manager → CAs → Add**:
   - Method: **Import an existing CA**.

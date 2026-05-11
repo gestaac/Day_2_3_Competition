@@ -40,7 +40,7 @@ New-ADOrganizationalUnit -Name "Singapore" -Path "DC=manila,DC=com" -ProtectedFr
 
 **What this does:** creates two containers in AD so users can be organised by city, matching the PDF's Table 3 layout. The `-ProtectedFromAccidentalDeletion:$false` flag is needed so you can delete/recreate during practice without errors.
 
-**Verify:** Open `dsa.msc` → expand `manila.com` → you should see both new OUs.
+**Verify:** Open **Server Manager → Tools → Active Directory Users and Computers** → expand `manila.com` in the left tree → you should see both new OUs.
 
 ## Step 3 — Create the security groups
 
