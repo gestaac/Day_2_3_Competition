@@ -5,7 +5,7 @@
 ## Pre-flight (10 min)
 1. Power on all VMs **except WINSRV4** (Offline Root CA — leave it off).
 2. From **Client1** open a CMD: `ping 192.168.2.10`, `ping 192.168.1.10`, `ping 172.16.100.254`. All three must respond.
-3. From **WINSRV1** open `dsa.msc` (ADUC) and verify users in Table 3 of the PDF (M001–M004, S001, C1, C2). If missing, run `03_winsrv1_create_users.ps1`.
+3. On **WINSRV1**, open **Server Manager → Tools menu → Active Directory Users and Computers**. Expand `manila.com` in the left tree. Verify users in Table 3 of the PDF (M001–M004, S001, C1, C2) exist. If missing, follow `03_winsrv1_create_users.md`.
 
 ## Order of operations (parallelisable but ordered for dependency)
 
